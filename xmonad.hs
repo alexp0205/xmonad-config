@@ -7,6 +7,7 @@ import System.Exit
 import XMonad
 import XMonad.Actions.CopyWindow            -- like cylons, except x windows
 import XMonad.Actions.DynamicProjects
+import XMonad.Config.Desktop
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -163,12 +164,6 @@ myLayout = spacing 2 $ avoidStruts $
 myNormalBorderColor  = "#7c7c7c"
 myFocusedBorderColor = "#3333ff"
 
--- Color of current window title in xmobar.
-xmobarTitleColor = "#FFB6B0"
-
--- Color of current workspace in xmobar.
-xmobarCurrentWorkspaceColor = "#CEFFAC"
-
 -- Width of the window border in pixels.
 myBorderWidth = 2
 
@@ -183,7 +178,7 @@ myBorderWidth = 2
 --
 myModMask = mod4Mask
 
-myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
+myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
   ----------------------------------------------------------------------
   -- Custom key bindings
   --
@@ -385,23 +380,19 @@ myFocusFollowsMouse = False
 
 myClickJustFocuses   = False
 
-myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
+myMouseBindings XConfig {XMonad.modMask = modMask} = M.fromList
   [
     -- mod-button1, Set the window to floating mode and move by dragging
-    ((modMask, button1),
-     (\w -> focus w >> mouseMoveWindow w))
+    ((modMask, button1), \w -> focus w >> mouseMoveWindow w)
 
     -- mod-button2, Raise the window to the top of the stack
-    , ((modMask, button2),
-       (\w -> focus w >> windows W.swapMaster))
+    , ((modMask, button2), \w -> focus w >> windows W.swapMaster)
 
     -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modMask, button3),
-       (\w -> focus w >> mouseResizeWindow w))
+    , ((modMask, button3), \w -> focus w >> mouseResizeWindow w)
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
   ]
-
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -427,20 +418,7 @@ myStartupHook = return ()
 ------------------------------------------------------------------------
 -- Run xmonad with all the defaults we set up.
 --
-main = do
-  xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
-  xmonad $ dynamicProjects projects $ defaults {
-      logHook = dynamicLogWithPP $ xmobarPP {
-            ppOutput = hPutStrLn xmproc
-          , ppTitle = xmobarColor xmobarTitleColor "" . shorten 50
-          , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor ""
-          , ppLayout = (\str -> "")
-          , ppSep = "  |  "
-      }
-      , manageHook = manageDocks <+> myManageHook
-      , startupHook = setWMName "LG3D"
-  }
-
+main = xmonad $ dynamicProjects projects defaults
 
 ------------------------------------------------------------------------
 -- Combine it all together
@@ -450,7 +428,7 @@ main = do
 --
 -- No need to modify this.
 --
-defaults = defaultConfig {
+defaults = desktopConfig {
     -- simple stuff
     terminal           = myTerminal,
     focusFollowsMouse  = myFocusFollowsMouse,
@@ -466,7 +444,7 @@ defaults = defaultConfig {
     mouseBindings      = myMouseBindings,
 
     -- hooks, layouts
-    layoutHook         = smartBorders $ myLayout,
+    layoutHook         = smartBorders myLayout,
     manageHook         = myManageHook,
     startupHook        = myStartupHook,
     handleEventHook    = docksEventHook <+> F.fullscreenEventHook
