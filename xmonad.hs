@@ -29,6 +29,10 @@ import Graphics.X11.ExtraTypes.XF86
 import XMonad.Hooks.EwmhDesktops
 import qualified XMonad.Hooks.EwmhDesktops as F
 
+import qualified DBus as D
+import qualified DBus.Client as D
+import qualified Codec.Binary.UTF8.String as UTF8
+
 import XMonad.Prompt
 import XMonad.Prompt.Ssh
 
@@ -412,13 +416,41 @@ myMouseBindings XConfig {XMonad.modMask = modMask} = M.fromList
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
-
+myStartupHook = do
+    setWMName "LG3D"
+    spawn "$HOME/configs/xmonad-config/polybar/launch.sh"
 
 ------------------------------------------------------------------------
 -- Run xmonad with all the defaults we set up.
 --
-main = xmonad $ dynamicProjects projects defaults
+-- main = xmonad $ dynamicProjects projects defaults
+
+
+main :: IO ()
+main = do
+    dbus <- D.connectSession
+    -- Request access to the DBus name
+    D.requestName dbus (D.busName_ "org.xmonad.Log")
+        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
+    xmonad $ dynamicProjects projects defaults { logHook = dynamicLogWithPP (myLogHook dbus) }
+
+-- Override the PP values as you would otherwise, adding colors etc depending
+-- on  the statusbar used
+myLogHook :: D.Client -> PP
+myLogHook dbus = def { ppOutput = dbusOutput dbus }
+
+-- Emit a DBus signal on log updates
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str = do
+    let signal = (D.signal objectPath interfaceName memberName) {
+            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+        }
+    D.emit dbus signal
+  where
+    objectPath = D.objectPath_ "/org/xmonad/Log"
+    interfaceName = D.interfaceName_ "org.xmonad.Log"
+    memberName = D.memberName_ "Update"
 
 ------------------------------------------------------------------------
 -- Combine it all together
