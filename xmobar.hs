@@ -76,13 +76,13 @@ Config {
             , "-n", "#6c71c4" -- violet
             , "-h", "#6c71c4" -- violet
             ] 100
-        , Run Volume "default" "Master"
-            [ "-t", "<status>", "--"
-            , "--on", "<fc=#859900><fn=1>\xf028</fn> <volume>%</fc>"
-            , "--onc", "#859900"
-            , "--off", "<fc=#dc322f><fn=1>\xf026</fn> MUTE</fc>"
-            , "--offc", "#dc322f"
-            ] 1
+        -- , Run Volume "default" "Master"
+        --     [ "-t", "<status>", "--"
+        --     , "--on", "<fc=#859900><fn=1>\xf028</fn> <volume>%</fc>"
+        --     , "--onc", "#859900"
+        --     , "--off", "<fc=#dc322f><fn=1>\xf026</fn> MUTE</fc>"
+        --     , "--offc", "#dc322f"
+        --     ] 1
         , Run Network "wlp2s0"
             [ "-t","<fn=1>\xf063</fn> <rx> <fn=1>\xf062</fn> <tx>"
             , "-H","1000"
