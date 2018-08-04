@@ -6,7 +6,7 @@ xrdb ~/.Xresources
 setxkbmap -option caps:escape
 
 # System tray
-trayer --edge top --align right --widthtype percent  --expand true --SetDockType true --SetPartialStrut true --transparent true --alpha 0 --tint 0x282828 --expand true --heighttype pixel --height 19 --width 8 &
+# trayer --edge top --align right --widthtype percent  --expand true --SetDockType true --SetPartialStrut true --transparent true --alpha 0 --tint 0x282828 --expand true --heighttype pixel --height 19 --width 8 &
 
 # Compositing
 compton &
@@ -20,7 +20,6 @@ xsetroot -cursor_name left_ptr
 firefox &
 mattermost-desktop &
 telegram-desktop &
-boostnote &
 
 pgrep redshift-gtk &> /dev/null || redshift-gtk &> /dev/null &
 
