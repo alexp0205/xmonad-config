@@ -60,8 +60,8 @@ font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = WunconSiji:pixelsize=10;1
 
 # modules-left = bspwm
-# modules-center = mpd
-modules-right = filesystem pulseaudio memory cpu wlan battery temperature date powermenu
+modules-center = powermenu
+modules-right = filesystem pulseaudio memory cpu wlan battery temperature date 
 
 tray-position = center
 tray-detached = true
@@ -132,16 +132,16 @@ ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/date]
 type = internal/date
-interval = 5
+interval = 1.0
 
-date =
-date-alt = " %Y-%m-%d"
+date = %F %a
+time = %T
+# date-alt and time-alt can be used to change the format on clicking
+# date-alt = " %Y-%m-%d"
+# time-alt = %H:%M:%S
 
-time = %H:%M
-time-alt = %H:%M:%S
-
-format-prefix = 
-format-prefix-foreground = ${colors.foreground-alt}
+format-background = #f5ff3399
+format-foreground = #fff
 format-underline = #0a6cf5
 
 label = %date% %time%
