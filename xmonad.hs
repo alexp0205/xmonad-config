@@ -79,14 +79,15 @@ scratchpads = [
     NS "ncmpcpp" "urxvt -name ncmpcpp -e ncmpcpp" (resource =? "ncmpcpp")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
-    NS "stardict" "stardict" (className =? "Stardict")
-        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
-
     NS "popUpPythonShell" "urxvt -name popUpPythonShell -e python" (resource =? "popUpPythonShell")
         (customFloating $ W.RationalRect l t w h),
 
     NS "trello" "google-chrome-stable --app='https://trello.com/b/IA1QlXA3/daily-todo'"
         (resource =? "trello.com__b_IA1QlXA3_daily-todo")
+        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
+
+    NS "evernote" "google-chrome-stable --app='https://www.evernote.com/Home.action#n=ae7058d5-c0f4-4b16-b9c6-59f10da29ada&s=s370&ses=4&sh=2&sds=5'"
+        (resource =? "www.evernote.com__Home.action")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
     NS "google-music" "google-chrome-stable --app='https://play.google.com/music/listen'"
@@ -343,11 +344,9 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
      namedScratchpadAction scratchpads "google-music")
 
   , ((modMask, xK_n),
-     namedScratchpadAction scratchpads "keep")
+     namedScratchpadAction scratchpads "evernote")
 
   , ((modMask .|. controlMask .|. shiftMask, xK_t), namedScratchpadAction scratchpads "htop")
-  , ((modMask .|. controlMask .|. shiftMask, xK_s), namedScratchpadAction scratchpads "stardict")
-  , ((modMask .|. controlMask .|. shiftMask, xK_n), namedScratchpadAction scratchpads "notes")
 
   -- Toggle display in thinkpad
   , ((modMask .|. shiftMask, xK_d),
