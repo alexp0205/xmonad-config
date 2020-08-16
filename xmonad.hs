@@ -86,8 +86,8 @@ scratchpads = [
         (resource =? "trello.com__b_IA1QlXA3_daily-todo")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
-    NS "evernote" "google-chrome-stable --app='https://www.evernote.com/Home.action#n=ae7058d5-c0f4-4b16-b9c6-59f10da29ada&s=s370&ses=4&sh=2&sds=5'"
-        (resource =? "www.evernote.com__Home.action")
+    NS "notion" "google-chrome-stable --app='https://www.notion.so/863e148a22274cd989a8c9c7d8b807b9?v=9c41705d9d59488484d48aa29f2e4f07'"
+        (resource =? "www.notion.so__863e148a22274cd989a8c9c7d8b807b9")
         (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
     NS "google-music" "google-chrome-stable --app='https://play.google.com/music/listen'"
@@ -193,7 +193,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
      spawn $ XMonad.terminal conf)
 
   -- Lock the screen using command specified by myScreensaver.
-  , ((modMask .|. controlMask, xK_l),
+  , ((modMask .|. shiftMask, xK_l),
      spawn myScreensaver)
 
   , ((modMask, xK_s),
@@ -344,7 +344,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
      namedScratchpadAction scratchpads "google-music")
 
   , ((modMask, xK_n),
-     namedScratchpadAction scratchpads "evernote")
+     namedScratchpadAction scratchpads "notion")
 
   , ((modMask .|. controlMask .|. shiftMask, xK_t), namedScratchpadAction scratchpads "htop")
 
@@ -369,7 +369,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
   -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
   -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
   [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0, 1, 2]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
