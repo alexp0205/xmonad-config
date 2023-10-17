@@ -29,8 +29,8 @@ import Graphics.X11.ExtraTypes.XF86
 import XMonad.Hooks.EwmhDesktops
 import qualified XMonad.Hooks.EwmhDesktops as F
 
-import qualified DBus as D
-import qualified DBus.Client as D
+-- import qualified DBus as D
+-- import qualified DBus.Client as D
 import qualified Codec.Binary.UTF8.String as UTF8
 
 import XMonad.Prompt
@@ -71,7 +71,7 @@ toggleDisplay = "bash /home/alex/configs/toggle_display.sh"
 -- Workspaces
 -- The default number of workspaces (virtual screens) and their names.
 --
-myWorkspaces = ["1:term","2:web","3:chat","4:mysql","5:code"] ++ map show [6..9]
+myWorkspaces = ["1:firefox","2:chrome","3:chat","4:terminal","5:code", "6:mysql"] ++ map show [7..9]
 
 scratchpads = [
     NS "htop" "urxvt -e htop" (title =? "htop") defaultFloating ,
@@ -81,18 +81,6 @@ scratchpads = [
 
     NS "popUpPythonShell" "urxvt -name popUpPythonShell -e python" (resource =? "popUpPythonShell")
         (customFloating $ W.RationalRect l t w h),
-
-    NS "trello" "google-chrome-stable --app='https://trello.com/b/IA1QlXA3/daily-todo'"
-        (resource =? "trello.com__b_IA1QlXA3_daily-todo")
-        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
-
-    NS "notion" "google-chrome-stable --app='https://www.notion.so/863e148a22274cd989a8c9c7d8b807b9?v=9c41705d9d59488484d48aa29f2e4f07'"
-        (resource =? "www.notion.so__863e148a22274cd989a8c9c7d8b807b9")
-        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
-
-    NS "google-music" "google-chrome-stable --app='https://play.google.com/music/listen'"
-        (resource =? "play.google.com__music_listen")
-        (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
 
     NS "keep" "google-chrome-stable --app='https://keep.google.com'"
         (resource =? "keep.google.com")
@@ -118,18 +106,16 @@ scratchpads = [
 -- 'className' and 'resource' are used below.
 --
 myManageHook' = composeAll
-    [ resource =? "Google-chrome"  --> doShift "2:web"
-    , resource  =? "google-chrome"  --> doShift "2:web"
-    , className =? "Firefox"  --> doShift "2:web"
+    [ resource =? "Google-chrome"  --> doShift "2:chrome"
+    , resource  =? "google-chrome"  --> doShift "2:chrome"
+    , className =? "Firefox"  --> doShift "1:firefox"
     , className =? "TelegramDesktop"  --> doShift "3:chat"
-    , className =? "Mattermost"  --> doShift "3:chat"
-    , className =? "Mysql-workbench-bin"  --> doShift "4:mysql"
+    , className =? "Mysql-workbench-bin"  --> doShift "6:mysql"
     , className =? "jetbrains-idea-ce"  --> doShift "5:code"
     , resource  =? "desktop_window" --> doIgnore
 
     , className =? "Steam"          --> doFloat
     , className =? "MPlayer"        --> doFloat
-    , className =? "Xchat"          --> doShift "3:chat"
     , className =? "stalonetray"    --> doIgnore
     ,isFullscreen                   --> doFullFloat]
 
@@ -235,10 +221,6 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
   -- Audio next.
   , ((0, 0x1008FF17),
      spawn "mpc next")
-
-  -- Eject CD tray.
-  , ((0, 0x1008FF2C),
-     spawn "eject -T")
 
   --------------------------------------------------------------------
   -- "Standard" xmonad key bindings
@@ -422,34 +404,34 @@ myStartupHook = do
 ------------------------------------------------------------------------
 -- Run xmonad with all the defaults we set up.
 --
--- main = xmonad $ dynamicProjects projects defaults
+main = xmonad $ dynamicProjects projects defaults
 
 
 main :: IO ()
-main = do
-    dbus <- D.connectSession
-    -- Request access to the DBus name
-    D.requestName dbus (D.busName_ "org.xmonad.Log")
-        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+-- main = do
+--    dbus <- D.connectSession
+--    -- Request access to the DBus name
+--    D.requestName dbus (D.busName_ "org.xmonad.Log")
+--        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
 
-    xmonad $ dynamicProjects projects defaults { logHook = dynamicLogWithPP (myLogHook dbus) }
+--    xmonad $ dynamicProjects projects defaults { logHook = dynamicLogWithPP (myLogHook dbus) }
 
 -- Override the PP values as you would otherwise, adding colors etc depending
 -- on  the statusbar used
-myLogHook :: D.Client -> PP
-myLogHook dbus = def { ppOutput = dbusOutput dbus }
+-- myLogHook :: D.Client -> PP
+-- myLogHook dbus = def { ppOutput = dbusOutput dbus }
 
 -- Emit a DBus signal on log updates
-dbusOutput :: D.Client -> String -> IO ()
-dbusOutput dbus str = do
-    let signal = (D.signal objectPath interfaceName memberName) {
-            D.signalBody = [D.toVariant $ UTF8.decodeString str]
-        }
-    D.emit dbus signal
-  where
-    objectPath = D.objectPath_ "/org/xmonad/Log"
-    interfaceName = D.interfaceName_ "org.xmonad.Log"
-    memberName = D.memberName_ "Update"
+-- dbusOutput :: D.Client -> String -> IO ()
+-- dbusOutput dbus str = do
+--    let signal = (D.signal objectPath interfaceName memberName) {
+--            D.signalBody = [D.toVariant $ UTF8.decodeString str]
+--        }
+--    D.emit dbus signal
+--  where
+--    objectPath = D.objectPath_ "/org/xmonad/Log"
+--    interfaceName = D.interfaceName_ "org.xmonad.Log"
+--    memberName = D.memberName_ "Update"
 
 ------------------------------------------------------------------------
 -- Combine it all together
@@ -477,6 +459,6 @@ defaults = desktopConfig {
     -- hooks, layouts
     layoutHook         = smartBorders myLayout,
     manageHook         = myManageHook,
-    startupHook        = myStartupHook,
-    handleEventHook    = docksEventHook <+> F.fullscreenEventHook
+    startupHook        = myStartupHook
+    -- handleEventHook    = docksEventHook <+> F.fullscreenEventHook
 }

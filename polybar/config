@@ -90,7 +90,7 @@ label-unmounted-foreground = ${colors.foreground-alt}
 
 [module/wlan]
 type = internal/network
-interface = wlp2s0
+interface = wlan0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
