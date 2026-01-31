@@ -326,7 +326,7 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
      namedScratchpadAction scratchpads "google-music")
 
   , ((modMask, xK_n),
-     namedScratchpadAction scratchpads "notion")
+     namedScratchpadAction scratchpads "keep")
 
   , ((modMask .|. controlMask .|. shiftMask, xK_t), namedScratchpadAction scratchpads "htop")
 
