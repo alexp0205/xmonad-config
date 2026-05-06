@@ -24,6 +24,7 @@ import XMonad.Layout.Spacing
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.SpawnOnce
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import Graphics.X11.ExtraTypes.XF86
@@ -66,7 +67,7 @@ myLauncher = "rofi -show run -lines 6  -opacity '80' -bc blue"
 startPomodoro = "echo 25 15 > ~/.pomodoro_session"
 stopPomodoro = "rm -f ~/.pomodoro_session"
 
-toggleDisplay = "bash /home/alex/configs/toggle_display.sh"
+fixDisplays = "~/.xmonad/fix-displays.sh"
 
 ------------------------------------------------------------------------
 -- Workspaces
@@ -339,9 +340,9 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
 
   , ((modMask .|. controlMask .|. shiftMask, xK_t), namedScratchpadAction scratchpads "htop")
 
-  -- Toggle display in thinkpad
+  -- Fix displays
   , ((modMask .|. shiftMask, xK_d),
-     spawn toggleDisplay)
+     spawn fixDisplays)
 
   -- Toggle display in thinkpad
   , ((modMask , xK_c),
@@ -408,7 +409,8 @@ myMouseBindings XConfig {XMonad.modMask = modMask} = M.fromList
 -- By default, do nothing.
 myStartupHook = do
     setWMName "LG3D"
-    spawn "$HOME/configs/xmonad-config/polybar/launch.sh"
+    spawnOnce "autorandr --change --force"
+    spawnOnce "$HOME/configs/xmonad-config/polybar/launch.sh"
 
 ------------------------------------------------------------------------
 -- Run xmonad with all the defaults we set up.

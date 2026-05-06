@@ -1,10 +1,13 @@
 #!/usr/bin/env sh
 
 # Terminate already running bar instances
-# killall -q polybar
+killall -q polybar
 
 # Wait until the processes have been shut down
-# while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+
+# Small delay for monitor detection
+sleep 1
 
 #Ref - https://github.com/polybar/polybar/issues/763#issuecomment-331604987
 if type "xrandr"; then
