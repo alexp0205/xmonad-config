@@ -6,6 +6,7 @@ import System.IO
 import System.Exit
 import XMonad
 import XMonad.Actions.CopyWindow            -- like cylons, except x windows
+import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects
 import XMonad.Config.Desktop
 import XMonad.Hooks.DynamicLog
@@ -181,6 +182,14 @@ myKeys conf@XConfig {XMonad.modMask = modMask} = M.fromList $
   -- Lock the screen using command specified by myScreensaver.
   , ((modMask .|. shiftMask, xK_l),
      spawn myScreensaver)
+
+  -- Move to the workspace on right
+  , ((modMask, xK_Right),
+     nextWS)
+
+  -- Move to the workspace on left
+  , ((modMask, xK_Left),
+     prevWS)
 
   , ((modMask, xK_s),
      sshPrompt def)
